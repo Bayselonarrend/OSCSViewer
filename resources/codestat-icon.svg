@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" aria-hidden="true" role="img">
+  <defs>
+    <mask id="clockMask">
+      <rect width="16" height="16" fill="white"/>
+      <circle cx="12.5" cy="12.5" r="2.6" fill="black"/>
+    </mask>
+    <mask id="logoMask" maskUnits="userSpaceOnUse">
+      <rect width="16" height="16" fill="white"/>
+      <circle cx="12.5" cy="12.5" r="3.2" fill="black"/>
+    </mask>
+  </defs>
+  
+  <!-- OneScript logo: translate to center, scale, then position in 16x16 -->
+  <g mask="url(#logoMask)">
+    <g transform="translate(8, 8) scale(0.00115) translate(-8229, -8229)">
+      <path fill="currentColor" d="M7884 9823l0 645-2504-1875 445-317 2059 1546zm0 1287l0 653-3377-2534 436-317 2940 2197zm0 1304l0 645-4215-3161 406-342 3809 2859zm0-9404l0 645-5396 4054 0-645 5396-4054zm0-1295l0 653-5396 4046 0-645 5396-4054zm0 2594l0 651-5396 4046 0-645 5396-4052zm0 1295l0 642-4969 3729 4969 3726 0 645-5396-4046 0-651 5396-4046zm691 4856l0-645 4969-3726-4969-3729 0-645 5396 4046 0 653-5396 4046zm0 1295l0-653 5396-4046 0 645-5396 4054zm0 2591l0-653 5396-4043 0 642-5396 4054zm0-1295l0-645 5396-4054 0 645-5396 4054zm0-9404l0-645 4215 3161-405 342-3810-2859zm0 1304l0-651 3378 2531-436 320-2942-2200zm0 1287l0-642 2504 1872-444 317-2060-1546z"/>
+    </g>
+  </g>
+  
+  <!-- Clock: thin outer ring -->
+  <circle cx="12.5" cy="12.5" r="3" fill="currentColor" mask="url(#clockMask)"/>
+  
+  <!-- Clock hands -->
+  <line x1="12.5" y1="12.5" x2="12.5" y2="10.7" stroke="currentColor" stroke-width="0.4" stroke-linecap="round"/>
+  <line x1="12.5" y1="12.5" x2="14.1" y2="13.2" stroke="currentColor" stroke-width="0.4" stroke-linecap="round"/>
+</svg>

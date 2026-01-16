@@ -1,0 +1,98 @@
+{
+  "name": "oscript-codestat-viewer",
+  "displayName": "OneScript CodeStat Viewer",
+  "description": "View OneScript code profiling statistics inline in your editor",
+  "repository": "https://github.com/bayselonarrend/oscript-codestat-viewer",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": ["Other"],
+  "activationEvents": ["onStartupFinished"],
+  "main": "./out/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "codestat",
+          "title": "CodeStat",
+          "icon": "resources/codestat-icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "codestat": [
+        {
+          "id": "codestatFiles",
+          "name": "CodeStat Files"
+        },
+        {
+          "id": "codestatHotLines",
+          "name": "Hot Lines (All)"
+        },
+        {
+          "id": "codestatCurrentFile",
+          "name": "Hot Lines (Current File)"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "codestat.refresh",
+        "title": "Refresh Stats",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "codestat.addFile",
+        "title": "Add Stat File",
+        "icon": "$(add)"
+      },
+      {
+        "command": "codestat.removeFile",
+        "title": "Remove Stat File",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "codestat.toggleFile",
+        "title": "Toggle Stat File",
+        "icon": "$(eye)"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "codestat.addFile",
+          "when": "view == codestatFiles",
+          "group": "navigation"
+        },
+        {
+          "command": "codestat.refresh",
+          "when": "view == codestatFiles",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "codestat.toggleFile",
+          "when": "view == codestatFiles",
+          "group": "inline"
+        },
+        {
+          "command": "codestat.removeFile",
+          "when": "view == codestatFiles",
+          "group": "inline"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.80.0",
+    "@types/node": "^18.0.0",
+    "typescript": "^5.0.0"
+  }
+}
