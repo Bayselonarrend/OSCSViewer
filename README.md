@@ -4,7 +4,7 @@
 
 Расширение для визуализации статистики профилирования кода (`-codestat`) OneScript в редакторе VS Code
 
-![Demo](./resources/demo.mp4)
+https://github.com/user-attachments/assets/11a9ad6e-b65a-47ff-81cb-e944aa6952de
 
 ## Возможности
 
