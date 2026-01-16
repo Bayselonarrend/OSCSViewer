@@ -114,7 +114,7 @@ export function activate(context: vscode.ExtensionContext) {
             updateAllDecorations();
             treeProvider.refresh();
             hotLinesProvider.setSelectedFile(null);
-            currentFileProvider.refresh();
+            currentFileProvider.setSelectedFile(null);
         }),
 
         vscode.commands.registerCommand('codestat.toggleFile', (item: StatFileItem) => {
@@ -132,6 +132,7 @@ export function activate(context: vscode.ExtensionContext) {
 
         vscode.commands.registerCommand('codestat.selectFile', (item: StatFileItem) => {
             hotLinesProvider.setSelectedFile(item.statFile.path);
+            currentFileProvider.setSelectedFile(item.statFile.path);
         }),
 
         vscode.commands.registerCommand('codestat.goToLine', (hotLine: HotLineInfo) => {
@@ -542,7 +543,7 @@ class HotLineItem extends vscode.TreeItem {
         if (time > 10) {
             return new vscode.ThemeIcon('warning', new vscode.ThemeColor('editorWarning.foreground'));
         }
-        return new vscode.ThemeIcon('clock');
+        return new vscode.ThemeIcon('info');
     }
 }
 
@@ -558,44 +559,53 @@ class CurrentFileHotLinesProvider implements vscode.TreeDataProvider<CurrentFile
     readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
     
     private hotLines: CurrentFileLineInfo[] = [];
+    private selectedStatFile: string | null = null;
 
     refresh() {
         this.updateHotLines();
         this._onDidChangeTreeData.fire(undefined);
     }
 
+    setSelectedFile(filePath: string | null) {
+        this.selectedStatFile = filePath;
+        this.refresh();
+    }
+
     private updateHotLines() {
         this.hotLines = [];
         
         const editor = vscode.window.activeTextEditor;
-        if (!editor) {
+        if (!editor || !this.selectedStatFile) {
+            return;
+        }
+
+        const data = rawCodeStatData.get(this.selectedStatFile);
+        if (!data) {
             return;
         }
 
         const fileName = path.basename(editor.document.fileName).toLowerCase();
         
-        // Aggregate stats from all enabled stat files
+        // Get stats only from selected stat file
         const lineStatsMap = new Map<number, { count: number; time: number; funcName: string }>();
         
-        for (const [, data] of rawCodeStatData.entries()) {
-            for (const [filePath, fileStats] of Object.entries(data)) {
-                const dataFileName = path.basename(filePath).toLowerCase();
-                if (dataFileName !== fileName) continue;
+        for (const [filePath, fileStats] of Object.entries(data)) {
+            const dataFileName = path.basename(filePath).toLowerCase();
+            if (dataFileName !== fileName) continue;
 
-                for (const [funcName, funcData] of Object.entries(fileStats)) {
-                    if (funcName === '#path') continue;
+            for (const [funcName, funcData] of Object.entries(fileStats)) {
+                if (funcName === '#path') continue;
 
-                    const funcStats = funcData as FunctionStats;
-                    for (const [lineStr, stat] of Object.entries(funcStats)) {
-                        const line = parseInt(lineStr);
-                        if (stat.time > 0) {
-                            const existing = lineStatsMap.get(line);
-                            if (existing) {
-                                existing.count += stat.count;
-                                existing.time += stat.time;
-                            } else {
-                                lineStatsMap.set(line, { count: stat.count, time: stat.time, funcName });
-                            }
+                const funcStats = funcData as FunctionStats;
+                for (const [lineStr, stat] of Object.entries(funcStats)) {
+                    const line = parseInt(lineStr);
+                    if (stat.time > 0) {
+                        const existing = lineStatsMap.get(line);
+                        if (existing) {
+                            existing.count += stat.count;
+                            existing.time += stat.time;
+                        } else {
+                            lineStatsMap.set(line, { count: stat.count, time: stat.time, funcName });
                         }
                     }
                 }
@@ -627,6 +637,10 @@ class CurrentFileHotLinesProvider implements vscode.TreeDataProvider<CurrentFile
         const editor = vscode.window.activeTextEditor;
         if (!editor) {
             return [new CurrentFileLineItem(null, 'No file open')];
+        }
+        
+        if (!this.selectedStatFile) {
+            return [new CurrentFileLineItem(null, 'Select a stat file above')];
         }
         
         if (this.hotLines.length === 0) {

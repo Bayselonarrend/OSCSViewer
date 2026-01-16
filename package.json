@@ -2,7 +2,9 @@
   "name": "oscript-codestat-viewer",
   "displayName": "OneScript CodeStat Viewer",
   "description": "View OneScript code profiling statistics inline in your editor",
-  "repository": "https://github.com/bayselonarrend/oscript-codestat-viewer",
+  "publisher": "bayselonarrend",
+  "repository": "https://github.com/bayselonarrend/OSCSViewer",
+  "icon": "resources/codestat-icon-color.png",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.80.0"
