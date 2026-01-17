@@ -1,3 +1,5 @@
+<img src="./resources/codestat-icon-color.png" width=128>
+
 # OneScript CodeStat Viewer
 
 Расширение для визуализации статистики профилирования кода (`-codestat`) OneScript в редакторе VS Code
